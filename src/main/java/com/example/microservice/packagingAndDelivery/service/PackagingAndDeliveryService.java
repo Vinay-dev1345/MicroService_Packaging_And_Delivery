@@ -18,6 +18,8 @@ public class PackagingAndDeliveryService {
 	public static final String PS = "protectiveSheath";
 	public static final String IID = "integralItemDelivery";
 	public static final String AID = "accessoryItemDelivery";
+	public static final String IIPR = "integralItemProcessing";
+	public static final String AIPR = "accessoryItemProcessing";
 	
 	@Autowired
 	PackagingAndDeliveryRepository packagingAndDeliveryRepository;
@@ -34,23 +36,25 @@ public class PackagingAndDeliveryService {
 		return mappedCostData;
 	}
 	
-	public double computePackagingAndDeliveryCost(String type , int count) {
-		double finalCost = -1;
+	public double[] computePackagingAndDeliveryCost(String type , int count) {
+		double[] finalCost = new double[2];
 		Map<String, String>loadCostData = loadPriceData();
 		
 		try{
 			if(type.equalsIgnoreCase("Integral")) {
 				double pCost = Double.parseDouble(loadCostData.get(IIP)) + Double.parseDouble(loadCostData.get(PS));
 				double dCost = Double.parseDouble(loadCostData.get(IID));
-				
-				finalCost = (pCost + dCost) * count;
+				double defProCost = Double.parseDouble(loadCostData.get(IIPR));
+				finalCost[0] = (pCost + dCost) * count;
+				finalCost[1] = defProCost * count;
 				}
 
 			if(type.equalsIgnoreCase("Accessory")) {
 				double pCost = Double.parseDouble(loadCostData.get(AIP)) + Double.parseDouble(loadCostData.get(PS));
 				double dCost = Double.parseDouble(loadCostData.get(AID));
-				
-				finalCost = (pCost + dCost) * count;
+				double defProCost = Double.parseDouble(loadCostData.get(AIPR));
+				finalCost[0] = (pCost + dCost) * count;
+				finalCost[1] = defProCost * count;
 				}
 			
 			}catch(Exception e) {

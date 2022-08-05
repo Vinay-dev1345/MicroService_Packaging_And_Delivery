@@ -24,8 +24,9 @@ public class PackagingAndDeliveryController {
 	public ResponseEntity<?> getCostingData(@RequestParam("type") String itemType , @RequestParam("count") int qty){
 		Map<String , Object> responseBody = new HashMap<String , Object>();
 		if(qty > 0) {
-			double response =  packagingAndDeliveryService.computePackagingAndDeliveryCost(itemType, qty);
-			responseBody.put("packagingAndDeliveryCost", response);
+			double[] response =  packagingAndDeliveryService.computePackagingAndDeliveryCost(itemType, qty);
+			responseBody.put("packagingAndDeliveryCost", response[0]);
+			responseBody.put("processingCost", response[1]);
 			responseBody.put("errors", false);
 			return ResponseEntity.ok(responseBody);
 		}else {
