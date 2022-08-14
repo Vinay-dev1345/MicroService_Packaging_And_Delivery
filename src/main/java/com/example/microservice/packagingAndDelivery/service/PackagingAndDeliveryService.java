@@ -4,15 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.microservice.packagingAndDelivery.PackagingAndDeliveryApplication;
 import com.example.microservice.packagingAndDelivery.Repository.PackagingAndDeliveryRepository;
 import com.example.microservice.packagingAndDelivery.entity.PackagingAndDeliveryCosting;
 
 @Service
 public class PackagingAndDeliveryService {
 	
+	private static Logger logger = LoggerFactory.getLogger(PackagingAndDeliveryApplication.class);
 	public static final String IIP = "integralItemPackaging";
 	public static final String AIP = "accessoryItemPackaging";
 	public static final String PS = "protectiveSheath";
@@ -25,14 +29,22 @@ public class PackagingAndDeliveryService {
 	PackagingAndDeliveryRepository packagingAndDeliveryRepository;
 	
 	public Map<String , String> loadPriceData(){
-		List<PackagingAndDeliveryCosting> costData = packagingAndDeliveryRepository.findAll();
+		List<PackagingAndDeliveryCosting> costData = null;
+		
+		try {
+			costData = packagingAndDeliveryRepository.findAll();
+		}catch(Exception e) {
+			logger.debug("Error occured while extracting data from database with error message : "+e.toString());
+		}
+		
 		Map<String , String > mappedCostData = new HashMap<String , String>();
 		
 		for(int index = 0 ; index<costData.size() ; index++) {
 			PackagingAndDeliveryCosting pd = costData.get(index);
 			mappedCostData.put(pd.getCostType(), pd.getPrice());
 		}
-		System.out.println(mappedCostData);
+		
+		logger.info("Successfully Extracted packaging and delivery cost data from database");
 		return mappedCostData;
 	}
 	
@@ -47,18 +59,27 @@ public class PackagingAndDeliveryService {
 				double defProCost = Double.parseDouble(loadCostData.get(IIPR));
 				finalCost[0] = (pCost + dCost) * count;
 				finalCost[1] = defProCost * count;
+				logger.info("Cost Compute was successfull for an Integral component." );
+				logger.info("Cost Computed for packaging : " + pCost );
+				logger.info("Cost Computed for delivery : " + dCost );
 				}
 
-			if(type.equalsIgnoreCase("Accessory")) {
+			else if(type.equalsIgnoreCase("Accessory")) {
 				double pCost = Double.parseDouble(loadCostData.get(AIP)) + Double.parseDouble(loadCostData.get(PS));
 				double dCost = Double.parseDouble(loadCostData.get(AID));
 				double defProCost = Double.parseDouble(loadCostData.get(AIPR));
 				finalCost[0] = (pCost + dCost) * count;
 				finalCost[1] = defProCost * count;
+				logger.info("Cost Compute was successfull for an Accessory component." );
+				logger.info("Cost Computed for packaging : " + pCost );
+				logger.info("Cost Computed for delivery : " + dCost );
 				}
 			
+			else {
+				logger.warn("Component Type " + type + " not found. ");
+			}
 			}catch(Exception e) {
-				System.out.println(e.toString());
+				logger.debug("Error occured while computing cost with error message : "+e.toString());
 			}
 		return finalCost;
 	}
