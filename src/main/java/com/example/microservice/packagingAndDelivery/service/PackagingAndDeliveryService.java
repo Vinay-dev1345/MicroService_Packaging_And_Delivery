@@ -29,13 +29,7 @@ public class PackagingAndDeliveryService {
 	PackagingAndDeliveryRepository packagingAndDeliveryRepository;
 	
 	public Map<String , String> loadPriceData(){
-		List<PackagingAndDeliveryCosting> costData = null;
-		
-		try {
-			costData = packagingAndDeliveryRepository.findAll();
-		}catch(Exception e) {
-			logger.debug("Error occured while extracting data from database with error message : "+e.toString());
-		}
+		List<PackagingAndDeliveryCosting> costData = packagingAndDeliveryRepository.findAll();
 		
 		Map<String , String > mappedCostData = new HashMap<String , String>();
 		

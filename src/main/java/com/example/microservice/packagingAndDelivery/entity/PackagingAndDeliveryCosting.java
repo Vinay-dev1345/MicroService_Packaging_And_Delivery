@@ -11,7 +11,10 @@ public class PackagingAndDeliveryCosting {
 	private String id;
 	private String costType;
 	private String price;
-
+	
+	public PackagingAndDeliveryCosting() {
+		
+	}
 	public String getId() {
 		return id;
 	}
@@ -35,5 +38,12 @@ public class PackagingAndDeliveryCosting {
 	public void setPrice(String price) {
 		this.price = price;
 	}
+	
+	public PackagingAndDeliveryCosting(String id , String costType, String price){
+		this.id = id;
+		this.costType = costType;
+		this.price = price;
+	}
+	
 
 }
