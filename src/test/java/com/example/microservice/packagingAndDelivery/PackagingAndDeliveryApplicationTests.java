@@ -19,8 +19,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 
 import com.example.microservice.packagingAndDelivery.Repository.PackagingAndDeliveryRepository;
+import com.example.microservice.packagingAndDelivery.controller.PackagingAndDeliveryController;
 import com.example.microservice.packagingAndDelivery.entity.PackagingAndDeliveryCosting;
 import com.example.microservice.packagingAndDelivery.service.PackagingAndDeliveryService;
 
@@ -33,8 +35,14 @@ class PackagingAndDeliveryApplicationTests {
 	@Mock
 	private PackagingAndDeliveryRepository packagingAndDeliveryRepository;
 	
+	@Mock
+	private PackagingAndDeliveryService packagingAndDeliveryServiceMocker;
+	
 	@InjectMocks
 	private PackagingAndDeliveryService packagingAndDeliveryService;
+	
+	@InjectMocks
+	private PackagingAndDeliveryController packagingAndDeliveryController;
 	
 	@Test
 	public void CostComputeForIntegralPartsSingleQuantity() {
@@ -112,6 +120,22 @@ class PackagingAndDeliveryApplicationTests {
 		Map<String, String > computedCostData = packagingAndDeliveryService.loadPriceData();
 		Assertions.assertEquals(expectedValue , computedCostData);
 					
+	}
+	
+	@Test
+	public void verifyGetCostingDataFunctionWithValidParameters() {
+		double[] computedValue = {350.00, 800.00};
+		when(packagingAndDeliveryServiceMocker.computePackagingAndDeliveryCost("Integral", 1)).thenReturn(computedValue);
+		ResponseEntity<?> actualResponse = packagingAndDeliveryController.getCostingData("Integral", 1);
+		Assertions.assertEquals(200 , actualResponse.getStatusCodeValue());
+	}
+	
+	@Test
+	public void verifyGetCostingDataFunctionWithInValidParameters() {
+		double[] computedValue = {0.00, 0.00};
+		when(packagingAndDeliveryServiceMocker.computePackagingAndDeliveryCost("undefined", 1)).thenReturn(computedValue);
+		ResponseEntity<?> actualResponse = packagingAndDeliveryController.getCostingData("undefined", 1);
+		Assertions.assertEquals(409 , actualResponse.getStatusCodeValue());
 	}
 
 }
