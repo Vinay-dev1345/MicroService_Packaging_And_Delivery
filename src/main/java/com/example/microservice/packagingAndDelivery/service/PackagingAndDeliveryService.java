@@ -54,8 +54,8 @@ public class PackagingAndDeliveryService {
 				finalCost[0] = (pCost + dCost) * count;
 				finalCost[1] = defProCost * count;
 				logger.info("Cost Compute was successfull for an Integral component." );
-				logger.info("Cost Computed for packaging : " + pCost );
-				logger.info("Cost Computed for delivery : " + dCost );
+				logger.info("Cost Computed for packaging : " + finalCost[0] );
+				logger.info("Cost Computed for delivery : " + finalCost[1] );
 				}
 
 			else if(type.equalsIgnoreCase("Accessory")) {
@@ -65,8 +65,8 @@ public class PackagingAndDeliveryService {
 				finalCost[0] = (pCost + dCost) * count;
 				finalCost[1] = defProCost * count;
 				logger.info("Cost Compute was successfull for an Accessory component." );
-				logger.info("Cost Computed for packaging : " + pCost );
-				logger.info("Cost Computed for delivery : " + dCost );
+				logger.info("Cost Computed for packaging : " + finalCost[0] );
+				logger.info("Cost Computed for delivery : " + finalCost[1] );
 				}
 			
 			else {
