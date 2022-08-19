@@ -26,7 +26,6 @@ import com.example.microservice.packagingAndDelivery.controller.PackagingAndDeli
 import com.example.microservice.packagingAndDelivery.entity.PackagingAndDeliveryCosting;
 import com.example.microservice.packagingAndDelivery.service.PackagingAndDeliveryService;
 
-import com.example.microservice.packagingAndDelivery.CostData;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
